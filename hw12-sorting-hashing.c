@@ -149,7 +149,7 @@ void printArray(int *a) // array의 값들을 출력하는 함수
 }
 
 
-int selectionSort(int *a)
+int selectionSort(int *a) // 선택정렬 함수
 {
 	int min;
 	int minindex;
@@ -158,13 +158,16 @@ int selectionSort(int *a)
 	printf("Selection Sort: \n");
 	printf("----------------------------------------------------------------\n");
 
-	printArray(a);
+	printArray(a); // 선택정렬하기 전의 array 출력
 
-	for (i = 0; i < MAX_ARRAY_SIZE; i++)
+	// 최소값을 찾아서 맨 앞에서부터 채워 오름차순으로 정렬(앞의 정렬된 부분은 접근하지 않고, 정렬되지 않은 뒤의 sub_array만 접근) 
+	for (i = 0; i < MAX_ARRAY_SIZE; i++) // array의 맨 앞에서부터 최소값을 정렬
 	{
+		// 최소값을 정렬하려는 sub_array의 첫 번째 요소의 값으로 임의 지정
 		minindex = i;
 		min = a[i];
-		for(j = i+1; j < MAX_ARRAY_SIZE; j++)
+
+		for(j = i+1; j < MAX_ARRAY_SIZE; j++) // sub_array 중 최소값 탐색
 		{
 			if (min > a[j])
 			{
@@ -172,56 +175,57 @@ int selectionSort(int *a)
 				minindex = j;
 			}
 		}
+		// 최소값과 sub_array의 첫 번째 요소값을 교환
 		a[minindex] = a[i];
 		a[i] = min;
 	}
-
 	printf("----------------------------------------------------------------\n");
-	printArray(a);
+	printArray(a); // 선택정렬된 array를 출력
+	
 	return 0;
 }
 
-int insertionSort(int *a)
+int insertionSort(int *a) // 삽입정렬 함수
 {
 	int i, j, t;
 
 	printf("Insertion Sort: \n");
 	printf("----------------------------------------------------------------\n");
 
-	printArray(a);
+	printArray(a); // 삽입정렬하기 전의 array 출력
 
-	for(i = 1; i < MAX_ARRAY_SIZE; i++)
+	for(i = 1; i < MAX_ARRAY_SIZE; i++) // array의 두 번째 요소부터 마지막 요소까지 삽입될 인덱스를 찾아 그 부분에 삽입
 	{
-		t = a[i];
-		j = i;
-		while (a[j-1] > t && j > 0)
+		t = a[i]; // 삽입할 요소의 값
+		j = i; // 삽입할 인덱스를 탐색할 변수
+		while (a[j-1] > t && j > 0) // 삽입할 인덱스(위치) 탐색 및 재배열
 		{
 			a[j] = a[j-1];
 			j--;
 		}
-		a[j] = t;
+		a[j] = t; // 삽입할 인덱스의 요소에 값을 삽입
 	}
 
 	printf("----------------------------------------------------------------\n");
-	printArray(a);
+	printArray(a); // 삽입정렬된 array를 출력
 
 	return 0;
 }
 
-int bubbleSort(int *a)
+int bubbleSort(int *a) // 버블정렬 함수
 {
 	int i, j, t;
 
 	printf("Bubble Sort: \n");
 	printf("----------------------------------------------------------------\n");
 
-	printArray(a);
+	printArray(a); // 버블정렬하기 전의 array 출력
 
-	for(i = 0; i < MAX_ARRAY_SIZE; i++)
+	for(i = 0; i < MAX_ARRAY_SIZE; i++) // array의 크기만큼 반복
 	{
-		for (j = 0; j < MAX_ARRAY_SIZE; j++)
+		for (j = 1; j < MAX_ARRAY_SIZE-i; j++) // 정렬되지 않은 앞의 sub_array의 최대값을 하나씩 sub_array의 마지막 인덱스에 쌓아 오름차순으로 정렬 
 		{
-			if (a[j-1] > a[j])
+			if (a[j-1] > a[j]) // 이웃한 요소 둘을 비교해 앞 요소의 값이 더 클 경우, 값을 서로 교환하여 오름차순으로 정렬 
 			{
 				t = a[j-1];
 				a[j-1] = a[j];
@@ -231,29 +235,29 @@ int bubbleSort(int *a)
 	}
 
 	printf("----------------------------------------------------------------\n");
-	printArray(a);
+	printArray(a); // 버블정렬된 array 출력
 
 	return 0;
 }
 
-int shellSort(int *a)
+int shellSort(int *a) // 쉘정렬 함수
 {
 	int i, j, k, h, v;
 
 	printf("Shell Sort: \n");
 	printf("----------------------------------------------------------------\n");
 
-	printArray(a);
+	printArray(a); // 쉘정렬하기 전의 array 출력
 
-	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2)
+	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2) // array의 탐색 간격을 절반씩 줄여 나간다. 
 	{
-		for (i = 0; i < h; i++)
+		for (i = 0; i < h; i++) // 탐색한 부분리스트 첫 번째 요소의 다음 요소의 부분리스트 탐색을 위한 i 인덱스 증가
 		{
-			for(j = i + h; j < MAX_ARRAY_SIZE; j += h)
+			for(j = i + h; j < MAX_ARRAY_SIZE; j += h) // array 탐색 간격만큼 범위를 증가시키며 부분리스트를 탐색
 			{
 				v = a[j];
 				k = j;
-				while (k > h-1 && a[k-h] > v)
+				while (k > h-1 && a[k-h] > v) // 삽입정렬과 유사하게, 부분리스트의 마지막 요소의 값이 삽입될 위치 탐색 및 재배열 
 				{
 					a[k] = a[k-h];
 					k -= h;
@@ -263,38 +267,41 @@ int shellSort(int *a)
 		}
 	}
 	printf("----------------------------------------------------------------\n");
-	printArray(a);
+	printArray(a); // 쉘정렬된 array 출력
 
 	return 0;
 }
 
-int quickSort(int *a, int n)
+int quickSort(int *a, int n) // 퀵정렬 함수 (recursive방식으로 구현)
 {
 	int v, t;
 	int i, j;
 
-	if (n > 1)
+	if (n > 1) // 정렬할 요소가 남았을 경우
 	{
-		v = a[n-1];
-		i = -1;
-		j = n - 1;
+		v = a[n-1]; // 마지막 요소의 값
+		i = -1; // 인덱스 0번부터 조사하기 위한 초기화
+		j = n - 1; // 마지막 요소의 인덱스
 
 		while(1)
 		{
-			while(a[++i] < v);
-			while(a[--j] > v);
+			while(a[++i] < v); // sub_array의 마지막 요소의 값보다 크거나 같은 값을 가진 요소의 인덱스 i 탐색
+			while(a[--j] > v); // sub_array의 마지막 요소의 값보다 작거나 같은 값을 가진 요소의 인덱스 j 탐색
 
-			if (i >= j) break;
+			if (i >= j) break; // i값이 j값보다 크거나 같은 값일 경우, while문 탈출
+			
+			// 탐색한 i와 j 인덱스의 요소에 담긴 값을 교환 
 			t = a[i];
 			a[i] = a[j];
 			a[j] = t;
 		}
+		// while문을 탈출했을 때의 i 인덱스의 요소값과 sub_array의 마지막 요소값을 교환
 		t = a[i];
 		a[i] = a[n-1];
 		a[n-1] = t;
 
-		quickSort(a, i);
-		quickSort(a+i+1, n-i-1);
+		quickSort(a, i); // 인덱스 i를 기준으로 앞과 인덱스 i의 요소까지의 sub_array에 대해 퀵정렬
+		quickSort(a+i+1, n-i-1); // 인덱스 i를 기준으로 뒤의 sub_array에 대해 퀵정렬
 	}
 
 
