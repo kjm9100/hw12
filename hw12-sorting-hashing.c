@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define MAX_ARRAY_SIZE			13	// array 생성 시, 동적 할당할 크기 -> 소수
-#define MAX_HASH_TABLE_SIZE 	MAX_ARRAY_SIZE
+#define MAX_HASH_TABLE_SIZE 	MAX_ARRAY_SIZE // hash table 크기
 
 // array 관련 함수
 int initialize(int **a); // array를 초기화하는 함수
@@ -18,9 +18,9 @@ int shellSort(int *a); // 쉘정렬 함수
 int quickSort(int *a, int n); // 퀵정렬 함수
 
 // hashing 관련 함수
-int hashCode(int key);
-int hashing(int *a, int **ht);
-int search(int *ht, int key);
+int hashCode(int key); // hashCode 생성하는 함수
+int hashing(int *a, int **ht); // 배열을 hash table로 만드는 함수
+int search(int *ht, int key); // hast table에서 key값에 해당하는 index를 탐색해 반환하는 함수
 
 
 int main()
@@ -57,19 +57,19 @@ int main()
 		case 'q': case 'Q': // q, Q 조작키 입력 시, array의 할당된 메모리 영역 해제
 			freeArray(array);
 			break;
-		case 's': case 'S': // s, S 조작키 입력 시,
+		case 's': case 'S': // s, S 조작키 입력 시, array를 선택정렬
 			selectionSort(array);
 			break;
-		case 'i': case 'I': // i, I 조작키 입력 시,
+		case 'i': case 'I': // i, I 조작키 입력 시, array를 삽입정렬
 			insertionSort(array);
 			break;
-		case 'b': case 'B': // b, B 조작키 입력 시,
+		case 'b': case 'B': // b, B 조작키 입력 시, array를 버블정렬
 			bubbleSort(array);
 			break; 
-		case 'l': case 'L': // l, L 조작키 입력 시,
+		case 'l': case 'L': // l, L 조작키 입력 시, array를 쉘정렬
 			shellSort(array);
 			break;
-		case 'k': case 'K': // k, K 조작키 입력 시,
+		case 'k': case 'K': // k, K 조작키 입력 시, array를 퀵정렬
 			printf("Quick Sort: \n");
 			printf("----------------------------------------------------------------\n");
 			printArray(array);
@@ -79,7 +79,7 @@ int main()
 
 			break;
 
-		case 'h': case 'H': // h, H 조작키 입력 시,
+		case 'h': case 'H': // h, H 조작키 입력 시, 해시 테이블 생성
 			printf("Hashing: \n");
 			printf("----------------------------------------------------------------\n");
 			printArray(array);
@@ -87,7 +87,7 @@ int main()
 			printArray(hashtable);
 			break;
 
-		case 'e': case 'E': // e, E 조작키 입력 시,
+		case 'e': case 'E': // e, E 조작키 입력 시, 해시 테이블에서 key값을 검색
 			printf("Your Key = ");
 			scanf("%d", &key);
 			printArray(hashtable);
@@ -308,47 +308,48 @@ int quickSort(int *a, int n) // 퀵정렬 함수 (recursive방식으로 구현)
 	return 0;
 }
 
-int hashCode(int key) {
-   return key % MAX_HASH_TABLE_SIZE;
+int hashCode(int key) { // hashCode 생성하는 함수
+   return key % MAX_HASH_TABLE_SIZE; // key값을 hash table 크기로 나눈 나머지를 반환
 }
 
-int hashing(int *a, int **ht)
+int hashing(int *a, int **ht) // 배열을 hash table로 만드는 함수
 {
 	int *hashtable = NULL;
 
 	
-	if(*ht == NULL) {
-		hashtable = (int*)malloc(sizeof(int) * MAX_ARRAY_SIZE);
-		*ht = hashtable;  
-	} else {
+	if(*ht == NULL) { // hash table이 존재하지 않을 경우, hash table을 위한 메모리 할당
+		hashtable = (int*)malloc(sizeof(int) * MAX_ARRAY_SIZE); 
+		*ht = hashtable;  // main의 array가 할당받은 메모리 영역에 접근할 수 있도록 주소값 복사해 넘겨준다.
+	} else { // hash table이 존재할 경우, hash table의 주소값을 복사해 넘겨준다.
 		hashtable = *ht;	
 	}
 
 	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
-		hashtable[i] = -1;
-
+	{hashtable[i] = -1;}// hast table 초기화
 	
-
+	// key, index, hashcode 변수 초기화
 	int key = -1;
 	int hashcode = -1;
 	int index = -1;
-	for (int i = 0; i < MAX_ARRAY_SIZE; i++)
+
+	for (int i = 0; i < MAX_ARRAY_SIZE; i++) // hash table 생성
 	{
-		key = a[i];
-		hashcode = hashCode(key);
+		key = a[i]; // 배열의 값을 key로 설정
+		hashcode = hashCode(key); // key값에 따른 hashCode 생성
 		
-		if (hashtable[hashcode] == -1)
-		{
+		if (hashtable[hashcode] == -1) // hash table의 hashCode 위치에 값이 비었을 경우
+		{	// 해당 위치에 key값 저장
 			hashtable[hashcode] = key;
-		} else 	{
-
-			index = hashcode;
-
+		} else 	{ // hash table의 hashCode 위치에 이미 값이 저장된 경우
+			
+			index = hashcode; 
+			// hash table 중 key값이 비어있는 위치를 탐색
 			while(hashtable[index] != -1)
 			{
 				index = (++index) % MAX_HASH_TABLE_SIZE;
 				
 			}
+			// 비어있는 위치에 key값 저장
 			hashtable[index] = key;
 		}
 	}
@@ -356,17 +357,18 @@ int hashing(int *a, int **ht)
 	return 0;
 }
 
-int search(int *ht, int key)
+int search(int *ht, int key) // hast table에서 key값에 해당하는 index를 탐색해 반환하는 함수
 {
-	int index = hashCode(key);
+	int index = hashCode(key); // key값에 따른 hashCode를 받는다.
 
-	if(ht[index] == key)
-		return index;
+	if(ht[index] == key) // hash table에서 hashCode에 해당하는 위치의 값이 key값과 같을 경우, 해당 index 반환
+	{return index;}
 
-	while(ht[++index] != key)
+	// hashCode의 해당하는 위치에 해당 key값이 없을 경우
+	while(ht[++index] != key) // hashCode를 기준으로 뒤에 위치하는 값들을 탐색 
 	{
 		index = index % MAX_HASH_TABLE_SIZE;
-	}
+	} // key값에 해당하는 index를 찾을 경우, 그 index 반환
 	return index;
 }
 
